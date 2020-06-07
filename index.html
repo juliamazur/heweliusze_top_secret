@@ -2,62 +2,86 @@
 <html>
   <head>
     <title>This is the title of the webpage!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <style>
-    body {
-      font-size: 22px;
-    }
+      body {
+        font-size: 26px;
+        font-family: 'Montserrat', arial;
+        background-color: #eee;
+      }
       .arr {
         display: flex;
       }
       .arr>div {
         width: 50px;
         height: 50px;
+        background-color: #29c3cb;
+        border: none;
+        cursor: pointer;
       }
       .square {
         margin: 30px auto;
       }
       .letters, .square>div {
         overflow: hidden;
-        border: 1px solid blue;
         display: flex;
         margin-bottom: 3px;
       }
       .box, .letters>div, .square>div>div, .vertical-stripes>div>div {
         border: 1px solid #bbb;
         margin: 2px;
-        height: 30px;
+        height: 50px;
         min-width: 50px;
-        line-height: 30px;
+        line-height: 50px;
         text-align: center;
+        background-color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
       }
       .letters>div, .square>div>div {
         flex-basis: 100%;
       }
       .square>div:hover>div, .square>div>div.picked-col {
-        background-color: #eee;
+        background-color: #fca62a;
       }
       .square>div>div:hover {
-        background-color: #bbb;
+        background-color: #ee502f;
       }
       .square {
-        border: 1px solid red;
       }
       .square>div {
-        border: 1px solid blue;
       }
       .vertical-stripes {
-        border: 1px solid red;
         display: flex;
       }
       .vertical-stripes>div {
-        border: 1px solid green;
         display: flex;
         flex-direction: column;
+      }
+      .vertical-stripes>div>div {
+        min-width: 65px;
+      }
+      .lane {
+        border: 1px solid blue;
+      }
+      .lane>div {
+        border: 1px solid green;
+        display: flex;
+        margin: 0 auto;
+        justify-content: center;
+      }
+      .lane>div>input {
+        border: 1px solid red;
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        font-size: 26px;
+        text-transform: uppercase;
       }
     </style>
   </head>
   <body>
-    <div>Shift: <span id="shift">0</span></div>
+    <div>Przesunięcie: <span id="shift">0</span></div>
     <div class="arr">
       <div class="box left" onclick="moveHorizontalArrayLeft()"><</div>
       <div class="box right" onclick="moveHorizontalArrayRight()">></div>
@@ -66,9 +90,13 @@
 
     <div class="letters" id="lettersStill"></div>
     <div class="letters move" id="lettersMove"></div>
-    <div class="square" id="square"></div>
+    <div class="square" id="square" style="display: none;"></div>
 
     <div class="vertical-stripes" id="verticalStripes"></div>
+
+
+    <div class="lane" id="lane">
+    </div>
 
   </body>
   <footer>
@@ -100,7 +128,6 @@
         let picked = document.getElementsByClassName("square-letter");
         for(el of picked) {
             el.classList.remove("picked-col");
-            // el.style.color = "black";
         }
 
 
@@ -110,7 +137,7 @@
           el.classList.add("picked-col");
           setTimeout(function() {
             el.classList.remove("picked-col");
-          }, 100);
+          }, 100); // @TODO
         }
       })
     }
@@ -120,9 +147,26 @@
     for(let index = 0; index < countVerticalStripes; index++) {
       let div = document.createElement('div');
       div.setAttribute("attr-idx", index);
-      // div.onclick = moveLeft();
+      div.onclick = moveVerticalColumnLeft;
       appendAlphabet(div, alphabet);
       verticalStripesDiv.appendChild(div);
+
+      function moveVerticalColumnLeft() {
+        let firstDiv = div.childNodes[0];
+        div.removeChild(firstDiv);
+        div.appendChild(firstDiv);
+      }
+    }
+
+    let countLaneLevels = 3;
+    let countLaneWidth = 26;
+    for(let index = 0; index < countLaneLevels; index++) {
+      let div = document.createElement('div');
+      for(let i = 0; i < countLaneWidth; i++) {
+        let inputDiv = document.createElement('input');
+        div.appendChild(inputDiv);
+      }
+      document.getElementById('lane').appendChild(div);
     }
 
 // -----------------------------------------------------------------------
@@ -186,7 +230,6 @@
       shift = shiftPlusOne(shift);
       document.getElementById("shift").innerHTML = shift;
       clear("lettersMove");
-      alphabetShifted.unshift(alphabetShifted.pop());
       moveRight(document.getElementById("lettersMove"), alphabetShifted);
     }
 
