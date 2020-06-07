@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+  <head>
+    <title>This is the title of the webpage!</title>
+    <style>
+    body {
+      font-size: 22px;
+    }
+      .arr {
+        display: flex;
+      }
+      .arr>div {
+        width: 50px;
+        height: 50px;
+      }
+      .square {
+        margin: 30px auto;
+      }
+      .letters, .square>div {
+        overflow: hidden;
+        border: 1px solid blue;
+        display: flex;
+        margin-bottom: 3px;
+      }
+      .box, .letters>div, .square>div>div, .vertical-stripes>div>div {
+        border: 1px solid #bbb;
+        margin: 2px;
+        height: 30px;
+        min-width: 50px;
+        line-height: 30px;
+        text-align: center;
+      }
+      .letters>div, .square>div>div {
+        flex-basis: 100%;
+      }
+      .square>div:hover>div, .square>div>div.picked-col {
+        background-color: #eee;
+      }
+      .square>div>div:hover {
+        background-color: #bbb;
+      }
+      .square {
+        border: 1px solid red;
+      }
+      .square>div {
+        border: 1px solid blue;
+      }
+      .vertical-stripes {
+        border: 1px solid red;
+        display: flex;
+      }
+      .vertical-stripes>div {
+        border: 1px solid green;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <div>Shift: <span id="shift">0</span></div>
+    <div class="arr">
+      <div class="box left" onclick="moveHorizontalArrayLeft()"><</div>
+      <div class="box right" onclick="moveHorizontalArrayRight()">></div>
+    </div>
+    <br/>
+
+    <div class="letters" id="lettersStill"></div>
+    <div class="letters move" id="lettersMove"></div>
+    <div class="square" id="square"></div>
+
+    <div class="vertical-stripes" id="verticalStripes"></div>
+
+  </body>
+  <footer>
+    <script>
+
+    // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+
+    var alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z'];
+    var alphabetShifted = alphabet.slice();
+    var shift = 0;
+    appendAlphabet(document.getElementById("lettersMove"), alphabet);
+    appendAlphabet(document.getElementById("lettersStill"), alphabet);
+
+    alphabet.map(function(item, key, alphabet = alphabet.slice()){
+      let div = document.createElement('div');
+      div.classList.add("squareRow");
+      appendAlphabet(div, alphabet, "square-letter");
+      alphabet.push(alphabet.shift());
+      document.getElementById("square").appendChild(div);
+    });
+
+    let letterInSquare = document.getElementsByClassName("square-letter");
+
+    // This handler will be executed every time the cursor
+    // is moved over a different list item
+    for(l of letterInSquare) {
+      l.addEventListener("mouseover", function(event){
+        let picked = document.getElementsByClassName("square-letter");
+        for(el of picked) {
+            el.classList.remove("picked-col");
+            // el.style.color = "black";
+        }
+
+
+        let idx = event.target.getAttribute("attr-idx");
+        let thisCol = document.querySelectorAll('[attr-idx="'+idx+'"]');
+        for(el of thisCol) {
+          el.classList.add("picked-col");
+          setTimeout(function() {
+            el.classList.remove("picked-col");
+          }, 100);
+        }
+      })
+    }
+
+    let countVerticalStripes = 10;
+    let verticalStripesDiv = document.getElementById('verticalStripes');
+    for(let index = 0; index < countVerticalStripes; index++) {
+      let div = document.createElement('div');
+      div.setAttribute("attr-idx", index);
+      // div.onclick = moveLeft();
+      appendAlphabet(div, alphabet);
+      verticalStripesDiv.appendChild(div);
+    }
+
+// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+
+    function appendAlphabet(parentDiv, alphabet, className = "") {
+      alphabet.map(function(item, index){
+        let div = appendLetter(parentDiv, item, className);
+        div.setAttribute("attr-idx", index);
+      });
+    }
+
+    function appendLetter(parentDiv, letter, className = "") {
+      let div = document.createElement('div');
+      if(className) {
+        div.classList.add(className);
+      }
+      div.innerHTML = letter;
+      parentDiv.appendChild(div);
+      return div;
+    }
+
+    function clear(divId) {
+      const div = document.getElementById(divId);
+      while(div.firstChild) div.removeChild(div.lastChild);
+    }
+
+    function shiftPlusOne(shift) {
+      shift += 1;
+      shift = shift % alphabet.length;
+      return shift;
+    }
+
+    function shiftMinusOne(shift) {
+      shift -= 1;
+      if (shift < 0) {
+        shift += alphabet.length;
+      }
+      shift = shift % alphabet.length;
+      return shift;
+    }
+
+    function moveLeft(div, alphabet) {
+      alphabet.push(alphabet.shift());
+      appendAlphabet(div, alphabet);
+    }
+
+    function moveRight(div, alphabet) {
+      alphabet.unshift(alphabet.pop());
+      appendAlphabet(div, alphabet);
+    }
+
+    function moveHorizontalArrayLeft() {
+      shift = shiftMinusOne(shift);
+      document.getElementById("shift").innerHTML = shift;
+      clear("lettersMove");
+      moveLeft(document.getElementById("lettersMove"), alphabetShifted);
+    }
+
+    function moveHorizontalArrayRight() {
+      shift = shiftPlusOne(shift);
+      document.getElementById("shift").innerHTML = shift;
+      clear("lettersMove");
+      alphabetShifted.unshift(alphabetShifted.pop());
+      moveRight(document.getElementById("lettersMove"), alphabetShifted);
+    }
+
+
+
+  </script>
+  </footer>
+</html>
