@@ -9,6 +9,25 @@
         font-family: 'Montserrat', arial;
         background-color: #eee;
       }
+      .page {
+        min-height: 100vh;
+      }
+      .page a.page-anchor {
+        padding-bottom: 50px;
+      }
+      .nav-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+      }
+      .nav-menu ul{
+        display: flex;
+        list-style-type: none;
+        margin: 10px;
+      }
+      .nav-menu ul li{
+        margin: 5px;
+      }
       .arr {
         display: flex;
       }
@@ -62,16 +81,14 @@
         min-width: 65px;
       }
       .lane {
-        border: 1px solid blue;
       }
       .lane>div {
-        border: 1px solid green;
         display: flex;
         margin: 0 auto;
         justify-content: center;
       }
       .lane>div>input {
-        border: 1px solid red;
+        margin: 3px;
         width: 50px;
         height: 50px;
         text-align: center;
@@ -81,21 +98,35 @@
     </style>
   </head>
   <body>
+    <div class="nav-menu">
+      <ul>
+        <li><a href="#page1">strona 1</a></li>
+        <li><a href="#page2">strona 2</a></li>
+        <li><a href="#page3">strona 3</a></li>
+      </ul>
+    </div>
+    <div class="page">
+      <a id="page1" class="page-anchor"></a>
     <div>Przesunięcie: <span id="shift">0</span></div>
     <div class="arr">
       <div class="box left" onclick="moveHorizontalArrayLeft()"><</div>
       <div class="box right" onclick="moveHorizontalArrayRight()">></div>
     </div>
     <br/>
-
     <div class="letters" id="lettersStill"></div>
     <div class="letters move" id="lettersMove"></div>
+  </div>
+
     <div class="square" id="square" style="display: none;"></div>
 
-    <div class="vertical-stripes" id="verticalStripes"></div>
+    <div class="page">
+      <a id="page2" class="page-anchor"></a>
+      <div class="vertical-stripes" id="verticalStripes"></div>
+    </div>
 
-
-    <div class="lane" id="lane">
+    <div class="page">
+      <a id="page3" class="page-anchor"></a>
+      <div class="lane" id="lane"></div>
     </div>
 
   </body>
