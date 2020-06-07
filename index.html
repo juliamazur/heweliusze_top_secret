@@ -1,7 +1,8 @@
 <!doctype html>
 <html>
   <head>
-    <title>This is the title of the webpage!</title>
+    <title>Top secret!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <style>
       body {
@@ -65,7 +66,6 @@
         margin: 30px auto;
       }
       .letters, .square>div {
-        overflow: hidden;
         display: flex;
         margin-bottom: 3px;
       }
@@ -179,7 +179,7 @@
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
 
-    var alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z'];
+    var alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','R','S','T','U','W','X','Y','Z'];
     var alphabetShifted = alphabet.slice();
     var shift = 0;
     appendAlphabet(document.getElementById("lettersMove"), alphabet);
@@ -359,14 +359,14 @@
 
     function moveHorizontalArrayLeft() {
       shift = shiftMinusOne(shift);
-      document.getElementById("shift").innerHTML = shift;
+      document.getElementById("shift").innerHTML = (alphabet.length - shift) % alphabet.length;
       clear("lettersMove");
       moveLeft(document.getElementById("lettersMove"), alphabetShifted);
     }
 
     function moveHorizontalArrayRight() {
       shift = shiftPlusOne(shift);
-      document.getElementById("shift").innerHTML = shift;
+      document.getElementById("shift").innerHTML = (alphabet.length - shift) % alphabet.length;
       clear("lettersMove");
       moveRight(document.getElementById("lettersMove"), alphabetShifted);
     }
