@@ -9,11 +9,21 @@
         font-family: 'Montserrat', arial;
         background-color: #eee;
       }
+      ::-moz-selection { /* Code for Firefox */
+        color: white;
+        background: #ff892a;
+      }
+      ::selection {
+        color: white;
+        background: #ff892a;
+      }
       .page {
         min-height: 100vh;
+        padding: 0 20px;
       }
       .page a.page-anchor {
-        padding-bottom: 50px;
+        display: block;
+        padding-bottom: 70px;
       }
       .nav-menu {
         position: fixed;
@@ -25,8 +35,15 @@
         list-style-type: none;
         margin: 10px;
       }
-      .nav-menu ul li{
-        margin: 5px;
+      .nav-menu ul li {
+        margin: 10px;
+      }
+      .nav-menu ul li a {
+        text-decoration: none;
+        color: #e31a5f;
+      }
+      .nav-menu ul li a:hover, .nav-menu ul li a:focus {
+        color: #ff892a;
       }
       .arr {
         display: flex;
@@ -34,9 +51,15 @@
       .arr>div {
         width: 50px;
         height: 50px;
-        background-color: #29c3cb;
+        background-color: #e31a5f;
+        color: #fff;
         border: none;
+        border-radius: 25px;
+        box-shadow: 4px 6px 13px #aaa;
         cursor: pointer;
+      }
+      .arr>div:hover {
+        background-color: #ff892a;
       }
       .square {
         margin: 30px auto;
@@ -55,6 +78,7 @@
         text-align: center;
         background-color: #fff;
         border-radius: 5px;
+        box-shadow: 3px 4px 15px #ccc;
         cursor: pointer;
       }
       .letters>div, .square>div>div {
@@ -77,6 +101,9 @@
         display: flex;
         flex-direction: column;
       }
+      .vertical-stripes>div.hidden, .lane>div.hidden {
+        display: none;
+      }
       .vertical-stripes>div>div {
         min-width: 65px;
       }
@@ -95,6 +122,10 @@
         font-size: 26px;
         text-transform: uppercase;
       }
+      .lane>div>input:focus {
+        border: 2px solid #e31a5f;
+        outline: none;
+      }
     </style>
   </head>
   <body>
@@ -107,7 +138,7 @@
     </div>
     <div class="page">
       <a id="page1" class="page-anchor"></a>
-    <div>Przesunięcie: <span id="shift">0</span></div>
+    <div>Przesunięcie: <span id="shift">0</span></div><br/>
     <div class="arr">
       <div class="box left" onclick="moveHorizontalArrayLeft()"><</div>
       <div class="box right" onclick="moveHorizontalArrayRight()">></div>
@@ -121,11 +152,23 @@
 
     <div class="page">
       <a id="page2" class="page-anchor"></a>
+      <div>Liczba kolumn: <span id="colCounter">10</span></div><br/>
+      <div class="arr">
+        <div class="box left" onclick="lessCol()"><</div>
+        <div class="box right" onclick="moreCol()">></div>
+      </div>
+      <br/>
       <div class="vertical-stripes" id="verticalStripes"></div>
     </div>
 
     <div class="page">
       <a id="page3" class="page-anchor"></a>
+      <div>Liczba wierszy: <span id="rowCounter">5</span></div><br/>
+      <div class="arr">
+        <div class="box left" onclick="lessRow()"><</div>
+        <div class="box right" onclick="moreRow()">></div>
+      </div>
+      <br/>
       <div class="lane" id="lane"></div>
     </div>
 
@@ -178,6 +221,7 @@
     for(let index = 0; index < countVerticalStripes; index++) {
       let div = document.createElement('div');
       div.setAttribute("attr-idx", index);
+      div.classList.add("visible");
       div.onclick = moveVerticalColumnLeft;
       appendAlphabet(div, alphabet);
       verticalStripesDiv.appendChild(div);
@@ -189,10 +233,11 @@
       }
     }
 
-    let countLaneLevels = 3;
+    let countLaneLevels = 5;
     let countLaneWidth = 26;
     for(let index = 0; index < countLaneLevels; index++) {
       let div = document.createElement('div');
+      div.classList.add("visible");
       for(let i = 0; i < countLaneWidth; i++) {
         let inputDiv = document.createElement('input');
         div.appendChild(inputDiv);
@@ -202,6 +247,68 @@
 
 // -----------------------------------------------------------------------
 // -----------------------------------------------------------------------
+
+    function moreRow() {
+      if(document.getElementById("rowCounter").textContent > 4) {
+        return false;
+      }
+
+      document.getElementById("rowCounter").textContent++;
+
+      let div = document.getElementById("lane");
+
+      let divs = div.getElementsByClassName("hidden");
+      let firstDiv = divs[0];
+      firstDiv.classList.remove("hidden");
+      firstDiv.classList.add("visible");
+    }
+
+    function lessRow() {
+      if(document.getElementById("rowCounter").textContent < 2) {
+        return false;
+      }
+
+      document.getElementById("rowCounter").textContent--;
+
+
+      let div = document.getElementById("lane");
+
+      let divs = div.getElementsByClassName("visible");
+      let firstDiv = divs[0];
+      firstDiv.classList.remove("visible");
+      firstDiv.classList.add("hidden");
+    }
+
+    function moreCol() {
+      if(document.getElementById("colCounter").textContent > 9) {
+        return false;
+      }
+
+      document.getElementById("colCounter").textContent++;
+
+      let div = document.getElementById("verticalStripes");
+
+      let divs = div.getElementsByClassName("hidden");
+      let firstDiv = divs[0];
+      firstDiv.classList.remove("hidden");
+      firstDiv.classList.add("visible");
+    }
+
+    function lessCol() {
+      if(document.getElementById("colCounter").textContent < 2) {
+        return false;
+      }
+
+      document.getElementById("colCounter").textContent--;
+
+      let div = document.getElementById("verticalStripes");
+
+      let divs = div.getElementsByClassName("visible");
+      let firstDiv = divs[0];
+      firstDiv.classList.remove("visible");
+      firstDiv.classList.add("hidden");
+
+    }
 
     function appendAlphabet(parentDiv, alphabet, className = "") {
       alphabet.map(function(item, index){
